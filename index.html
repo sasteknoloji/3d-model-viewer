@@ -37,17 +37,19 @@
   const viewer = document.getElementById("viewer");
 
   btn.addEventListener("click", async () => {
-    try {
-      if (!document.fullscreenElement) {
-        // Fullscreen dene
-        await viewer.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    } catch (err) {
-      console.warn("Fullscreen çalışmadı, WebView olabilir:", err);
-      // Mobil uygulamada isek tarayıcıya yönlendir
-      window.location.href = "https://sasteknoloji.github.io/3d-model-viewer-klasik-semaver/";
+    if (!document.fullscreenElement) {
+      // Fullscreen dene
+      const p = viewer.requestFullscreen();
+
+      // Bir süre bekle, fullscreen gerçekten açıldı mı kontrol et
+      setTimeout(() => {
+        if (!document.fullscreenElement) {
+          console.warn("Fullscreen başarısız → WebView olabilir, tarayıcıya yönlendiriliyor.");
+          window.location.href = "https://sasteknoloji.github.io/3d-model-viewer-klasik-semaver/";
+        }
+      }, 500); // 0.5 sn sonra kontrol et
+    } else {
+      document.exitFullscreen();
     }
   });
 </script>
