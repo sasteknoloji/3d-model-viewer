@@ -36,22 +36,28 @@
   const btn = document.getElementById("fullscreenBtn");
 
   btn.addEventListener("click", () => {
-    // Yeni sekme aç, model-viewer tek başına gözüksün
-    const url = window.location.origin + window.location.pathname + "?fullscreen=true";
-    window.open(url, "_blank");
+    // Yeni sekme aç ve fullscreen.html yükle
+    const newWin = window.open("", "_blank");
+    newWin.document.write(`
+      <html>
+      <head>
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"><\/script>
+        <style>body{margin:0;} model-viewer{width:100vw;height:100vh;background:black;}</style>
+      </head>
+      <body>
+        <model-viewer src="semaver.glb"
+          alt="3D model"
+          auto-rotate
+          camera-controls
+          environment-image="1.hdr"
+          tone-mapping="aces"
+          exposure="0.6"
+          shadow-intensity="1">
+        </model-viewer>
+      </body>
+      </html>
+    `);
   });
-
-  // Eğer yeni sekmede açıldıysa model-viewer tam ekran olsun
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("fullscreen") === "true") {
-    const viewer = document.getElementById("viewer");
-    viewer.style.position = "fixed";
-    viewer.style.top = "0";
-    viewer.style.left = "0";
-    viewer.style.width = "100vw";
-    viewer.style.height = "100vh";
-    viewer.style.zIndex = "9999";
-  }
 </script>
 
 </body>
