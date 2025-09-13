@@ -31,42 +31,17 @@
   cursor:pointer;
 ">⛶</button>
 
-<style>
-  .force-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 9999 !important;
-    background: black !important;
-  }
-</style>
-
 <script>
   const btn = document.getElementById("fullscreenBtn");
   const viewer = document.getElementById("myModel");
-  let isFull = false;
 
   btn.addEventListener("click", () => {
-    if (!isFull) {
-      // Önce gerçek fullscreen dene
-      if (viewer.requestFullscreen) {
-        viewer.requestFullscreen().catch(() => {
-          viewer.classList.add("force-fullscreen"); // fallback
-        });
-      } else {
-        viewer.classList.add("force-fullscreen"); // fallback
-      }
+    if (!document.fullscreenElement) {
+      viewer.requestFullscreen();
       btn.textContent = "✖";
-      isFull = true;
     } else {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      }
-      viewer.classList.remove("force-fullscreen");
+      document.exitFullscreen();
       btn.textContent = "⛶";
-      isFull = false;
     }
   });
 </script>
