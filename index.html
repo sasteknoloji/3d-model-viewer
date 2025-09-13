@@ -36,11 +36,18 @@
   const btn = document.getElementById("fullscreenBtn");
   const viewer = document.getElementById("viewer");
 
-  btn.addEventListener("click", () => {
-    if (!document.fullscreenElement) {
-      viewer.requestFullscreen();  // model-viewer tam ekran
-    } else {
-      document.exitFullscreen();   // çıkış
+  btn.addEventListener("click", async () => {
+    try {
+      if (!document.fullscreenElement) {
+        // Fullscreen dene
+        await viewer.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    } catch (err) {
+      console.warn("Fullscreen çalışmadı, WebView olabilir:", err);
+      // Mobil uygulamada isek tarayıcıya yönlendir
+      window.location.href = "https://sasteknoloji.github.io/3d-model-viewer-klasik-semaver/";
     }
   });
 </script>
