@@ -1,8 +1,9 @@
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-<body style="margin: 0;">
- 
-<model-viewer  id="myModel"
- src="semaver.glb"
+
+<body style="margin:0;">
+
+<model-viewer id="myModel"
+  src="semaver.glb"
   alt="3D model"
   auto-rotate
   camera-controls
@@ -12,31 +13,66 @@
   shadow-intensity="1"
   orbit-sensitivity="3"
   touch-action="none"
-  style="width: 100%; height: 100vh; background: gray;">
+  style="width:100%; height:100vh; background:gray; position:relative;">
 </model-viewer>
+
 <button id="fullscreenBtn" style="
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-    ">⛶</button>
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+">⛶</button>
 
 <script>
   const btn = document.getElementById("fullscreenBtn");
-  const elem = document.documentElement; // tüm sayfa fullscreen
+  const viewer = document.getElementById("myModel");
 
   btn.addEventListener("click", () => {
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen();  // fullscreen aç
+    // Eğer gerçek fullscreen destekleniyorsa
+    if (viewer.requestFullscreen) {
+      if (!document.fullscreenElement) {
+        viewer.requestFullscreen().catch(err => {
+          console.warn("Fullscreen açılamadı:", err);
+          fallbackFullscreen(); // destek yoksa fallback
+        });
+      } else {
+        document.exitFullscreen();
+      }
     } else {
-      document.exitFullscreen(); // fullscreen kapat
+      // iOS Safari gibi tarayıcılarda fallback çalıştır
+      fallbackFullscreen();
     }
   });
+
+  // Fallback (CSS ile fullscreen benzeri)
+  function fallbackFullscreen() {
+    if (!viewer.classList.contains("ios-fs")) {
+      viewer.classList.add("ios-fs");
+      btn.textContent = "✖"; // ikon değiştir
+    } else {
+      viewer.classList.remove("ios-fs");
+      btn.textContent = "⛶";
+    }
+  }
 </script>
+
+<style>
+  /* iOS Safari için sahte fullscreen */
+  .ios-fs {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999;
+    background: black;
+  }
+</style>
+
 </body>
