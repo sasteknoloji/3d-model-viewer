@@ -50,10 +50,20 @@
 
   btn.addEventListener("click", () => {
     if (!isFull) {
-      viewer.classList.add("force-fullscreen");
+      // Önce gerçek fullscreen dene
+      if (viewer.requestFullscreen) {
+        viewer.requestFullscreen().catch(() => {
+          viewer.classList.add("force-fullscreen"); // fallback
+        });
+      } else {
+        viewer.classList.add("force-fullscreen"); // fallback
+      }
       btn.textContent = "✖";
       isFull = true;
     } else {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
       viewer.classList.remove("force-fullscreen");
       btn.textContent = "⛶";
       isFull = false;
